@@ -2,7 +2,7 @@ public class Clothing extends Product {
     private String Size;
     private String Color;
 
-    public Clothing(String productId, String productName, int numberOfAvailableItems, int price, String Size,
+    public Clothing(String productId, String productName, int numberOfAvailableItems, double price, String Size,
                    String Color){
         super(productId, productName, numberOfAvailableItems, price);
         this.Size = Size;
@@ -23,5 +23,9 @@ public class Clothing extends Product {
 
     public void setColor(){
         this.Color = Color;
+    }
+
+    public String getProductType(){
+        return "Clothing";
     }
 }
