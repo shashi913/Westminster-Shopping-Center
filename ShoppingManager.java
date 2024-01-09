@@ -1,9 +1,11 @@
+import java.util.ArrayList;
+
 interface ShoppingManager {
-    public void displayMenu();
-    public void addProduct(/*Product product*/);
-    public void deleteProduct(/*String productId*/);
-    public void printProductList();
-    public void saveToFile(String fileName);
-    public void readFromFile(String fileName);
+    void displayMenu();
+    void addProduct(/*Product product*/);
+    void deleteProduct(/*String productId*/);
+    void printProductList();
+    void saveToFile(String fileName);
+    ArrayList<Product> readFromFile(/*String fileName*/);
 
 }

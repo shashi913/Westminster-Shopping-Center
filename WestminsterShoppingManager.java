@@ -1,8 +1,11 @@
+import javax.swing.*;
 import java.util.*;
 import java.io.*;
 public class WestminsterShoppingManager implements ShoppingManager{
     static Scanner input = new Scanner(System.in);
-    private ArrayList<Product> productList;
+    private ArrayList<Product> productList = new ArrayList<>(50);
+
+    final ArrayList<User> users = new ArrayList<>(50);           //not clear
 
     //static Scanner input = new Scanner(System.in);
 
@@ -12,34 +15,57 @@ public class WestminsterShoppingManager implements ShoppingManager{
 
     public static void main(String[] args) {
         WestminsterShoppingManager westminsterShoppingManager = new WestminsterShoppingManager();
-        westminsterShoppingManager.readFromFile("savedProductList.txt");
+        westminsterShoppingManager.readFromFile();
 
-        while(true){
-            westminsterShoppingManager.displayMenu();
-            int option = input.nextInt();
-            switch(option){
-                case 1:
-                    westminsterShoppingManager.addProduct();
-                    break;
+        /*for(Product number: westminsterShoppingManager.productList){
+            System.out.println(number.getProductName());
+            System.out.println(number.getProductType());
+            System.out.println(number.getNumberOfAvailableItems());
+            System.out.println(number.getProductId());
+            System.out.println(number.getPrice());
 
-                case 2:
-                    westminsterShoppingManager.deleteProduct();
-                    break;
+        }*/
 
-                case 3:
-                    westminsterShoppingManager.printProductList();
-                    break;
+        while(true) {
+            try {
+                westminsterShoppingManager.displayMenu();
+                int option = input.nextInt();
+                input.nextLine();
+                switch (option) {
+                    case 1:
+                        westminsterShoppingManager.addProduct();
+                        break;
 
-                case 4:
-                    westminsterShoppingManager.saveToFile("savedProductList.txt");
-                    break;
+                    case 2:
+                        westminsterShoppingManager.deleteProduct();
+                        break;
 
-                default:
-                    System.out.println("Invalid option");
-                    break;
+                    case 3:
+                        westminsterShoppingManager.printProductList();
+                        break;
+
+                    case 4:
+                        westminsterShoppingManager.saveToFile("savedProductList.txt");
+                        break;
+
+                    case 5:
+                        westminsterShoppingManager.openGUI();
+                        break;
+
+                    case 6:
+                        System.out.println("Exiting...");
+                        System.exit(0);
+                        break;
+
+                    default:
+                        System.out.println("Invalid option");
+                        break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input");
+                input.next();
             }
         }
-
     }
     public void displayMenu(){
         System.out.println("Westminster Shopping Center management system");
@@ -48,6 +74,8 @@ public class WestminsterShoppingManager implements ShoppingManager{
         System.out.println("2. Delete an existing item");
         System.out.println("3. Print the list of items");
         System.out.println("4. Save in a file");
+        System.out.println("5. Open GUI");
+        System.out.println("6. Exit");
         System.out.print("Option number: ");
     }
 
@@ -70,6 +98,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 System.out.println("2. Clothes");
                 System.out.print("Product number: ");
                 int productType = input.nextInt();
+                input.nextLine();
 
                 System.out.print("Product ID: ");
                 String productId = input.nextLine();
@@ -79,6 +108,7 @@ public class WestminsterShoppingManager implements ShoppingManager{
                 int numberOfAvailableItems = input.nextInt();
                 System.out.print("Price:");
                 double price = input.nextDouble();
+                input.nextLine();
 
                 switch (productType) {
                     case 1:
@@ -176,30 +206,71 @@ public class WestminsterShoppingManager implements ShoppingManager{
 
     public void saveToFile(String fileName){
         try{
-            FileOutputStream fileOutputStream = new FileOutputStream(fileName);
+            /*FileOutputStream fileOutputStream = new FileOutputStream("savedProductList.txt");
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(productList);
             objectOutputStream.close();
-            fileOutputStream.close();
+            fileOutputStream.close();*/
+
+            FileWriter fileWriter = new FileWriter("savedProductList.txt");
+            for(Product product : productList){
+                fileWriter.write(product.getProductType() + "," + product.getProductId() + "," + product.getProductName() + "," + product.getNumberOfAvailableItems() + "," + product.getPrice() + ",");
+
+                if(product.getProductType().equals("Electronics")){
+                    Electronics electronics = (Electronics) product;
+                    fileWriter.write(electronics.getBrandName() + "," + electronics.getWarrantyPeriod() + "\n");
+                }else{
+                    Clothing clothing = (Clothing) product;
+                    fileWriter.write(clothing.getSize() + "," + clothing.getColor() + "\n");
+                }
+                fileWriter.write("\n");
+            }
+            fileWriter.close();
+
             System.out.println("Product list saved to " + fileName + " successfully");
         }catch(IOException e){
             System.out.println("Error saving product list");
         }
     }
 
-    public void readFromFile(String fileName){
+    public ArrayList<Product> readFromFile(/*String fileName*/){
+        File file = new File("savedProductList.txt");
         try{
-            FileInputStream fileInputStream = new FileInputStream(fileName);
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            productList = (ArrayList<Product>) objectInputStream.readObject();
+            /*FileInputStream fileInputStream = new FileInputStream(fileName);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);*/
+
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String str;
+
+            while((str = reader.readLine()) != null) {
+                String[] words = str.split(",");
+
+                if (words[0].equals("Electronics")) {
+                    productList.add(new Electronics(words[1], words[2], Integer.parseInt(words[3]), Double.parseDouble(words[4]), words[5], Integer.parseInt(words[6])));
+                } else if(words[0].equals("Clothing")){
+                    productList.add(new Clothing(words[1], words[2], Integer.parseInt(words[3]), Double.parseDouble(words[4]), words[5], words[6]));
+                }
+            }
+            System.out.println("Load Successfully");
+            /*productList = (ArrayList<Product>) objectInputStream.readObject();
             objectInputStream.close();
             fileInputStream.close();
-            System.out.println("Product list read from " + fileName + " successfully");
+            System.out.println("Product list read from " + fileName + " successfully");*/
         }catch(IOException e){
             System.out.println("Error reading product list");
-        }catch(ClassNotFoundException e){
+        }/*catch(ClassNotFoundException e){
             System.out.println("Error reading product list");
-        }
+        }*/
+        return productList;
+    }
+
+    public void openGUI(){
+        LoginPageGUI loginGUI = new LoginPageGUI(users,productList);
+        loginGUI.setTitle("Login or Register");
+        loginGUI.setSize(600, 500);
+        loginGUI.setResizable(false);
+        loginGUI.setVisible(true);
+
     }
 
 }
