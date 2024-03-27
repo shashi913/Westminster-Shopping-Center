@@ -1,3 +1,4 @@
+package Assignment;
 public class Electronics extends Product {
     private String BrandName;
     private int WarrantyPeriod;
@@ -17,14 +18,9 @@ public class Electronics extends Product {
         return WarrantyPeriod;
     }
 
-    public void setBrandName(){
-        this.BrandName = BrandName;
-    }
-
-    public void setWarrantyPeriod(){
-        this.WarrantyPeriod = WarrantyPeriod;
-    }
+    @Override
     public String getProductType(){
         return "Electronics";
     }
+
 }

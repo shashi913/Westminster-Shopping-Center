@@ -1,15 +1,16 @@
+package Assignment;
 public class Clothing extends Product {
-    private String Size;
+    private int Size;
     private String Color;
 
-    public Clothing(String productId, String productName, int numberOfAvailableItems, double price, String Size,
-                   String Color){
+    public Clothing(String productId, String productName, int numberOfAvailableItems, double price, int Size,
+                    String Color){
         super(productId, productName, numberOfAvailableItems, price);
         this.Size = Size;
         this.Color = Color;
     }
 
-    public String getSize(){
+    public int getSize(){
         return Size;
     }
 
@@ -17,15 +18,9 @@ public class Clothing extends Product {
         return Color;
     }
 
-    public void setSize(){
-        this.Size = Size;
-    }
-
-    public void setColor(){
-        this.Color = Color;
-    }
-
+    @Override
     public String getProductType(){
         return "Clothing";
     }
+
 }

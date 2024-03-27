@@ -1,22 +1,16 @@
+package Assignment;
+
 import java.util.ArrayList;
 
 public class User {
     private String UserName;
     private String Password;
-    private final ArrayList<Purchase> purchaseHistory;  //dave
+    /*private final ArrayList<Purchase> purchaseHistory;*/
 
     public User(String UserName, String Password){
         this.UserName = UserName;
         this.Password = Password;
-        this.purchaseHistory = new ArrayList<>();    //dave
-    }
-
-    public void setUSerPassword(String Password){
-        this.Password = Password;
-    }
-
-    public void setUserName(String UserName){
-        this.UserName = UserName;
+        /*this.purchaseHistory = new ArrayList<>();*/
     }
 
     public String getUserName(){
@@ -27,7 +21,7 @@ public class User {
         return Password;
     }
 
-    public boolean firstPurchase(){     //dave
+    /*public boolean firstPurchase(){         // Check if the user has made a purchase before by checking the purchaseHistory array
         return this.purchaseHistory.isEmpty();
-    }
+    }*/
 }

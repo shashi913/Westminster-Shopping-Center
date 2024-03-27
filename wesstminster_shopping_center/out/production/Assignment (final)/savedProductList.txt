@@ -1,0 +1,15 @@
+Electronics,prd1,owen,10,29.0,abans,12
+
+Clothing,prd2,short,26,500.0,30,black
+
+Electronics,prd4,iron,26,5000.0,phillips,6
+
+Electronics,prd 3,vfef,2,2334.0,wdfe,12
+
+Clothing,prd5,etfret,3,233.0,33,th
+
+Electronics,prd6,cgfg,1,2324.0,sdfedf,34
+
+Clothing,prd7,2,2,3434.0,43,red
+
+Clothing,prd8,pp,30,344,44,black

@@ -1,19 +1,53 @@
+package Assignment;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
+import java.util.*;
+public class ShoppingCart extends JFrame{
+    final private ArrayList<Product> selectedProducts;
+    private final Map<Product, Integer> quentityOnCart;
 
-public class ShoppingCartGUI extends JFrame {
     JLabel totalPrice,firstPurchaseDiscountPrice,threeItemsDiscountPrice,finalPrice;
 
-    public ShoppingCartGUI(CartTableModel cartTableModel){
-        Font bodyFont = new Font("Arial", Font.PLAIN, 12);
-        Font headerFont = new Font("Arial", Font.BOLD, 12);
-        this.setLayout(new BorderLayout());
+    public double calculateTotalPrice(){
+        double totalPrice = 0;
+        for(Product product : this.selectedProducts){
+            totalPrice += product.getPrice();
+        }
+        return totalPrice;
+    }
 
-        JTable cartTable = new JTable(cartTableModel);
-        // Add the cartTable to a JScrollPane and add it to the frame
+    public ArrayList<Product> getCartList() {
+        return selectedProducts;
+    }
+
+    public Map<Product, Integer> getQuantityOnCart() {
+        return quentityOnCart;
+    }
+
+    public ShoppingCart(ArrayList<Product> productsOnCart, Map<Product,Integer> quantityOnCart) {
+
+        this.selectedProducts = productsOnCart;
+        this.quentityOnCart = quantityOnCart;
+    }
+
+    public void addProduct(Product product){
+
+        if(selectedProducts.contains(product)){
+            quentityOnCart.put(product, quentityOnCart.get(product) + 1);
+        }
+        else{
+            selectedProducts.add(product);
+            quentityOnCart.put(product,1);
+        }
+    }
+
+    public void ShoppingCartGUI(ShoppingCartTableModel shoppingCartTableModel){
+
+        JTable cartTable = new JTable(shoppingCartTableModel);
         JScrollPane scrollPane = new JScrollPane(cartTable);
 
         JPanel tablePanel = new JPanel();
@@ -32,8 +66,6 @@ public class ShoppingCartGUI extends JFrame {
 
         // set header attributes
         JTableHeader tableHeader = cartTable.getTableHeader();
-        tableHeader.setReorderingAllowed(false); // Disable reordering
-        tableHeader.setFont(headerFont); // Set font to bold
         tableHeader.setPreferredSize(new Dimension(tableHeader.getWidth(), 35));
 
         //bottom panel - contains four panels for each row
@@ -64,18 +96,11 @@ public class ShoppingCartGUI extends JFrame {
         threeItemsLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         finalTotalLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
-        // labels for prices values
         totalPrice = new JLabel("0 £");
         firstPurchaseDiscountPrice = new JLabel("-0 £");
         threeItemsDiscountPrice = new JLabel("-0 £");
         finalPrice = new JLabel("0 £");
 
-        totalLabel.setFont(bodyFont);
-        firstPurchaseLabel.setFont(bodyFont);
-        threeItemsLabel.setFont(bodyFont);
-        totalPrice.setFont(bodyFont);
-        firstPurchaseDiscountPrice.setFont(bodyFont);
-        threeItemsDiscountPrice.setFont(bodyFont);
 
 
         Dimension priceLabelsSize = new Dimension(100,20);
@@ -98,24 +123,35 @@ public class ShoppingCartGUI extends JFrame {
         bottomPanel.add(threeItemsPanel);
         bottomPanel.add(finalTotalPanel);
 
+
         add(tablePanel,BorderLayout.CENTER);
         add(bottomPanel,BorderLayout.SOUTH);
     }
 
-    public void updatePrices(double totalPrice,ShoppingCart shoppingCart,boolean firstPurchase){
+    public void updatePrices(double totalPrice, ShoppingCart shoppingCart/*, boolean firstPurchase*/){
         double discount1 = 0;
         double discount2 = shoppingCart.getThreeSameItemsDiscount();
 
         this.totalPrice.setText((Math.round(totalPrice* 100.0) / 100.0) +" £");
-        if(firstPurchase) {
-            discount1 = Math.round((totalPrice*0.1) * 100.0) / 100.0;
-            this.firstPurchaseDiscountPrice.setText("-" + discount1 + " £");
-        }
+
+        discount1 = Math.round((totalPrice*0.1) * 100.0) / 100.0;
+        this.firstPurchaseDiscountPrice.setText("-" + discount1 + " £");
 
         this.threeItemsDiscountPrice.setText("-"+ discount2 +" £");
 
         totalPrice = totalPrice-(discount1+discount2);
         this.finalPrice.setText((Math.round(totalPrice* 100.0) / 100.0) +" £");
     }
+
+    public double getThreeSameItemsDiscount(){
+        double discount = 0;
+        for(Product product: selectedProducts){
+            if(getQuantityOnCart().containsKey(product) && getQuantityOnCart().get(product) >= 3)
+                discount += (product.getPrice() * getQuantityOnCart().get(product)) * 0.2;
+        }
+        return Math.round(discount * 100.0) / 100.0;
+    }
+
+
 
 }

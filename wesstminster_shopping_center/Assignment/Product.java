@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+package Assignment;
 
 public abstract class Product {
     private String productId;
@@ -29,13 +29,7 @@ public abstract class Product {
         return price;
     }
 
-    public void setNumberOfAvailableItems(int numberOfAvailableItems) {
-        this.numberOfAvailableItems = numberOfAvailableItems;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
     public abstract String getProductType();
+
+
 }
